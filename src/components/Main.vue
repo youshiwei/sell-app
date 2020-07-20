@@ -13,7 +13,7 @@ export default {
 <style lang="less" scoped>
 .main {
   flex: 1;
-  background: lightblue;
+  background: #fff;
   overflow-y: scroll;
 }
 </style>

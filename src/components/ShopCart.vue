@@ -8,6 +8,7 @@ export default {};
 
 <style lang="less" scoped>
 .shop-cart {
+  background-color: lightblue;
   flex: 0 0 60px;
 }
 </style>

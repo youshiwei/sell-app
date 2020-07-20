@@ -22,7 +22,7 @@
     <van-divider>商家公告</van-divider>
     <p class="bulletin">{{ seller.bulletin }}</p>
     <div class="close">
-      <i @click="close" class="iconfont icon-guanbi"></i>
+      <i @click="close">×</i>
     </div>
   </div>
 </template>
@@ -52,15 +52,20 @@ export default {
   box-sizing: border-box;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: rgba(0, 0, 0, 0.8);
   position: fixed;
   top: 0;
   left: 0;
   h1 {
     text-align: center;
     font-weight: bold;
-    font-size: 16px;
+    font-size: 20px;
     margin-bottom: 20px;
+  }
+  .van-divider {
+    font-size: 20px;
+    font-weight: bold;
+    color: #fff;
   }
   .supports {
     .supports-item {
@@ -74,7 +79,10 @@ export default {
     text-align: center;
     line-height: 40px;
     position: absolute;
-    bottom: 0;
+    bottom: 20px;
+    left: 50%;
+    font-size: 50px;
+    transform: translateX(-50%);
   }
 }
 </style>

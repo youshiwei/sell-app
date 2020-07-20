@@ -38,7 +38,7 @@ export default {
   props: ["seller"],
   data() {
     return {
-      isVisible: true
+      isVisible: false
     };
   }
 };
