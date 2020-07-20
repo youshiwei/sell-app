@@ -1,14 +1,20 @@
 <template>
-  <div class="header">头部</div>
+  <div class="header">{{ seller}}</div>
 </template>
 
 <script>
-export default {};
+export default {
+  props: ["seller"],
+  data() {
+    return {};
+  }
+};
 </script>
 
 <style lang="less" scoped>
 .header {
   flex: 0 0 130px;
   background: pink;
+  overflow: hidden;
 }
 </style>

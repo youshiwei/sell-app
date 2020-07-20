@@ -1,11 +1,13 @@
 <template>
   <div class="main">
-    <h1>主体</h1>
+    <router-view :goodsList="goodsList" :seller="seller" />
   </div>
 </template>
 
 <script>
-export default {};
+export default {
+  props: ["goodsList", "seller"]
+};
 </script>
 
 <style lang="less" scoped>
