@@ -13,7 +13,7 @@
           void-icon="star"
           void-color="#eee"
         />
-        <span>(699)</span>
+        <span>(699)月售 {{seller.sellCount}} 单</span>
       </div>
       <div class="right">
         <van-icon color="red" name="like" />

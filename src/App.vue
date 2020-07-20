@@ -40,10 +40,8 @@ export default {
           .substr(11);
       })
       .join("-");
-    console.log(data.date);
     this.goodsList = goodsList;
     this.seller = data;
-    console.log(this.seller);
   }
 };
 </script>
