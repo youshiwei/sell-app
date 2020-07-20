@@ -8,13 +8,11 @@
 </template>
 
 <script>
-import Vue from "vue";
 import Header from "@/components/Header.vue";
 import Nav from "@/components/Nav.vue";
 import Main from "@/components/Main.vue";
 import ShopCart from "@/components/ShopCart.vue";
-import { Button } from "vant";
-Vue.use(Button);
+
 import { getGoods, getSeller } from "@/api";
 export default {
   components: {
@@ -26,7 +24,8 @@ export default {
   data() {
     return {
       seller: {},
-      goodsList: []
+      goodsList: [],
+      value: 3
     };
   },
   async created() {
@@ -34,6 +33,7 @@ export default {
     let { data } = await getSeller();
     this.goodsList = goodsList;
     this.seller = data;
+    console.log(this.seller);
   }
 };
 </script>
