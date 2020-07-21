@@ -23,9 +23,9 @@
     <div class="blank"></div>
     <div class="action">
       <div class="filter">
-        <van-button type="info">全部57</van-button>
-        <van-button type="primary">满意47</van-button>
-        <van-button type="danger">不满意10</van-button>
+        <van-button size="small" type="info">全部57</van-button>
+        <van-button size="small" type="primary">满意47</van-button>
+        <van-button size="small" type="danger">不满意10</van-button>
       </div>
       <div class="check">
         <van-checkbox v-model="checked" icon-size="24px">只看有内容的评价</van-checkbox>
@@ -61,7 +61,6 @@ export default {
       v.rateTime = Moment(v.rateTime).format("YYYY-MM-DD HH:mm");
     });
     this.ratings = data;
-    console.log(this.ratings[0]);
   }
 };
 </script>

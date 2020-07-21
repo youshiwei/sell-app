@@ -54,6 +54,7 @@ export default {
   height: 100%;
   background-color: rgba(0, 0, 0, 0.8);
   position: fixed;
+  z-index: 99;
   top: 0;
   left: 0;
   h1 {

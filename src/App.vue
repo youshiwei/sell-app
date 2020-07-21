@@ -40,7 +40,8 @@ export default {
           .substr(11);
       })
       .join("-");
-    this.goodsList = goodsList;
+    this.goodsList = goodsList.reverse();
+    console.log(this.goodsList);
     this.seller = data;
   }
 };
