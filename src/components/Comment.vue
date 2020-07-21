@@ -18,7 +18,7 @@
             <span>{{ rating.deliveryTime ? rating.deliveryTime : "**"}}分钟送达</span>
           </div>
         </div>
-        <span class="time">{{ rating.rateTime}}</span>
+        <span class="time">{{ rating.rateTime | formatTime}}</span>
       </div>
       <div class="text">{{rating.text}}</div>
       <div class="recommend">
@@ -42,6 +42,7 @@
 
 <script>
 import Vue from "vue";
+import Moment from "moment";
 import { Image as VanImage } from "vant";
 Vue.use(VanImage);
 export default {
@@ -50,6 +51,11 @@ export default {
     return {
       value: 4.0
     };
+  },
+  filters: {
+    formatTime(time) {
+      return Moment(time).format("YYYY-MM-DD HH:mm");
+    }
   }
 };
 </script>

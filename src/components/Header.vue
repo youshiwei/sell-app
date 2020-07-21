@@ -24,8 +24,9 @@
       <span>{{seller.bulletin}}</span>
       <i @click="isVisible = true" class="iconfont icon-arrow-right" style="font-size:12px;"></i>
     </div>
-
-    <DetailModel :seller="seller" @handleClose="isVisible = false" v-show="isVisible" />
+    <transition name="fade">
+      <DetailModel :seller="seller" @handleClose="isVisible = false" v-show="isVisible" />
+    </transition>
   </div>
 </template>
 
@@ -106,6 +107,17 @@ export default {
     .icon-arrow-right {
       flex: 0 0 20px;
     }
+  }
+  // 进入动画和离开动画的过程
+  .fade-enter-active,
+  .fade-leave-active {
+    transition: all 0.3s;
+  }
+
+  // 进入动画的瞬间 和 离开动画的瞬间
+  .fade-enter,
+  .fade-leave-to {
+    opacity: 0;
   }
 }
 </style>

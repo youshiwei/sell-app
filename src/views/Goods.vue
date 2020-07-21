@@ -15,7 +15,7 @@
         <div :id="item.name" v-for="item in goodsList" :key="item.name" class="food">
           <h2 class="name">{{ item.name}}</h2>
           <ul>
-            <li v-for="v in item.foods" :key="v.id">
+            <li @click="fetchDetail(v)" v-for="v in item.foods" :key="v.id">
               <img width="80" height="80" :src="v.imgUrl" alt />
               <div class="content">
                 <p class="title">{{v.name}}</p>
@@ -23,42 +23,69 @@
                 <p class="desc">{{v.goodsDesc}}</p>
                 <p class="price">￥{{v.price}}</p>
               </div>
+              <div class="control">
+                <span @click.stop="v.count < 1 ? 0 : v.count--" class="iconfont icon-jianshao1"></span>
+                <span>{{v.count}}</span>
+                <span @click.stop="v.count++" class="iconfont icon-zengjia"></span>
+              </div>
             </li>
           </ul>
         </div>
       </div>
     </div>
+    <!-- 商品详情 -->
+    <transition name="slide">
+      <goods-detail :curFood="curFood" @handleClose="isVisible = false" v-show="this.isVisible" />
+    </transition>
   </div>
 </template>
 
 <script>
 import BeScroll from "better-scroll";
+import GoodsDetail from "@/components/GoodsDetail.vue";
 export default {
+  components: {
+    GoodsDetail
+  },
   props: ["goodsList"],
   data() {
     return {
+      curFood: {},
       curActive: "新品专享",
       rightScroll: {},
-      hArr: []
+      hArr: [],
+      isVisible: false
     };
+  },
+  created() {
+    this.$nextTick(() => {
+      this.calcArr();
+    });
   },
   methods: {
     ChangeActive(name) {
       this.curActive = name;
       this.rightScroll.scrollToElement(document.getElementById(name), 300);
+    },
+    fetchDetail(v) {
+      this.isVisible = true;
+      this.curFood = v;
+    },
+    calcArr() {
+      let total = 0;
+      for (let cate of this.goodsList) {
+        let h = document.getElementById(cate.name).offsetHeight;
+        this.hArr.push({
+          min: total,
+          max: total + h,
+          name: cate.name
+        });
+        total = total + h;
+      }
     }
   },
   updated() {
-    let total = 0;
-    for (let cate of this.goodsList) {
-      let h = document.getElementById(cate.name).offsetHeight;
-      this.hArr.push({
-        min: total,
-        max: total + h,
-        name: cate.name
-      });
-      total = total + h;
-    }
+    this.calcArr();
   },
   mounted() {
     // 左侧滚动丝滑
@@ -94,7 +121,6 @@ export default {
     li {
       font-size: 14px;
       height: 50px;
-      border-bottom: 1px solid #fff;
       display: flex;
       align-items: center;
       padding: 0 10px;
@@ -121,11 +147,24 @@ export default {
         padding: 10px;
         box-sizing: border-box;
         li {
+          position: relative;
           border-bottom: 1px solid #ccc;
           display: flex;
           padding: 10px;
           line-height: 1.5;
           box-sizing: border-box;
+          .control {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            span {
+              font-size: 20px;
+              padding: 5px;
+              &.iconfont {
+                color: #1989fa;
+              }
+            }
+          }
           img {
             margin-right: 5px;
           }
@@ -154,6 +193,17 @@ export default {
         }
       }
     }
+  }
+  // 进入动画和离开动画的过程
+  .slide-enter-active,
+  .slide-leave-active {
+    transition: all 0.3s;
+  }
+
+  // 进入动画的瞬间 和 离开动画的瞬间
+  .slide-enter,
+  .slide-leave-to {
+    transform: translateY(100%);
   }
 }
 </style>

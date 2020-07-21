@@ -40,6 +40,13 @@ export default {
           .substr(11);
       })
       .join("-");
+    // 给每个食品添加数量字段,使用双重循环
+    for (let v of goodsList) {
+      for (let food of v.foods) {
+        food.count = 0;
+        console.log(food);
+      }
+    }
     this.goodsList = goodsList.reverse();
     this.seller = data;
   }

@@ -23,15 +23,18 @@
     <div class="blank"></div>
     <div class="action">
       <div class="filter">
-        <van-button size="small" type="info">全部57</van-button>
-        <van-button size="small" type="primary">满意47</van-button>
-        <van-button size="small" type="danger">不满意10</van-button>
+        <button
+          @click="change(v.name)"
+          :class="{active:curActive === v.name}"
+          v-for="v in this.rateCate"
+          :key="v.name"
+        >{{v.name}}{{v.items.length}}</button>
       </div>
       <div class="check">
         <van-checkbox v-model="checked" icon-size="24px">只看有内容的评价</van-checkbox>
       </div>
     </div>
-    <Comment v-for="(v,i) in ratings" :key="i" :rating="v" />
+    <Comment v-for="(v,i) in fetchRate" :key="i" :rating="v" />
   </div>
 </template>
 
@@ -51,16 +54,52 @@ export default {
   data() {
     return {
       value: 4.0,
-      ratings: [],
-      checked: true
+      curRate: [],
+      allRate: [],
+      goodRate: [],
+      badRate: [],
+      rateCate: [],
+      checked: false,
+      curActive: "全部"
     };
+  },
+  methods: {
+    change(name) {
+      this.curActive = name;
+    }
+  },
+  computed: {
+    fetchRate() {
+      this.rateCate.forEach(v => {
+        if (v.name === this.curActive) {
+          this.curRate = v.items;
+        }
+      });
+      if (this.checked) {
+        return this.curRate.filter(v => v.text != "");
+      }
+      return this.curRate;
+    }
   },
   async created() {
     let { data } = await getRatings();
     data.forEach(v => {
       v.rateTime = Moment(v.rateTime).format("YYYY-MM-DD HH:mm");
     });
-    this.ratings = data;
+    // 获取各评论类型的数量
+    data.forEach(v => {
+      if (v.score >= 4) {
+        this.goodRate.push(v);
+      } else {
+        this.badRate.push(v);
+      }
+    });
+    this.allRate = [...this.goodRate, ...this.badRate];
+    this.rateCate = [
+      { name: "全部", items: this.allRate },
+      { name: "满意", items: this.goodRate },
+      { name: "不满意", items: this.badRate }
+    ];
   }
 };
 </script>
@@ -115,6 +154,15 @@ export default {
       display: flex;
       button {
         margin-right: 10px;
+        border: 1px solid #1989fa;
+        border-radius: 4px;
+        color: #aaa;
+        background: #fff;
+        padding: 10px;
+        &.active {
+          background-color: #1989fa;
+          color: #fff;
+        }
       }
       border-bottom: 1px solid #ccc;
     }

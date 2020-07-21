@@ -80,7 +80,7 @@ export default {
     text-align: center;
     line-height: 40px;
     position: absolute;
-    bottom: 20px;
+    bottom: 40px;
     left: 50%;
     font-size: 50px;
     transform: translateX(-50%);
