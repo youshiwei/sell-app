@@ -4,7 +4,7 @@
       <ul>
         <li
           v-for="item in goodsList"
-          @click="curActive = item.name"
+          @click="ChangeActive(item.name)"
           :class="{active: curActive === item.name }"
           :key="item.name"
         >{{item.name}}</li>
@@ -12,7 +12,7 @@
     </div>
     <div id="foods" class="foods">
       <div>
-        <div v-for="item in goodsList" :key="item.name" class="food">
+        <div :id="item.name" v-for="item in goodsList" :key="item.name" class="food">
           <h2 class="name">{{ item.name}}</h2>
           <ul>
             <li v-for="v in item.foods" :key="v.id">
@@ -37,15 +37,47 @@ export default {
   props: ["goodsList"],
   data() {
     return {
-      curActive: "新品专享"
+      curActive: "新品专享",
+      rightScroll: {},
+      hArr: []
     };
   },
+  methods: {
+    ChangeActive(name) {
+      this.curActive = name;
+      this.rightScroll.scrollToElement(document.getElementById(name), 300);
+    }
+  },
+  updated() {
+    let total = 0;
+    for (let cate of this.goodsList) {
+      let h = document.getElementById(cate.name).offsetHeight;
+      this.hArr.push({
+        min: total,
+        max: total + h,
+        name: cate.name
+      });
+      total = total + h;
+    }
+  },
   mounted() {
+    // 左侧滚动丝滑
     new BeScroll("#cates", {
       click: true
     });
-    new BeScroll("#foods", {
-      click: true
+    // 右侧滚动丝滑
+    this.rightScroll = new BeScroll("#foods", {
+      click: true, //可以点击
+      probeType: 3 // 可以派发滚动事件
+    });
+    // 绑定滚动事件
+    this.rightScroll.on("scroll", pos => {
+      let y = Math.abs(pos.y);
+      for (let item of this.hArr) {
+        if (y >= item.min && y < item.max) {
+          this.curActive = item.name;
+        }
+      }
     });
   }
 };
@@ -57,8 +89,8 @@ export default {
   display: flex;
   .cates {
     flex: 0 0 80px;
-    background: #ccc;
-    overflow: scroll;
+    background: #f4f5f7;
+    overflow: hidden;
     li {
       font-size: 14px;
       height: 50px;
@@ -73,15 +105,15 @@ export default {
     }
   }
   .foods {
-    overflow: scroll;
+    overflow: hidden;
     flex: 1;
     .food {
       .name {
-        background: #ccc;
-        height: 20px;
+        background: #f4f5f7;
+        height: 25px;
         border-left: 2px solid orange;
-        line-height: 20px;
-        font-size: 12px;
+        line-height: 25px;
+        font-size: 14px;
         padding-left: 10px;
         box-sizing: border-box;
       }

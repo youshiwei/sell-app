@@ -41,7 +41,6 @@ export default {
       })
       .join("-");
     this.goodsList = goodsList.reverse();
-    console.log(this.goodsList);
     this.seller = data;
   }
 };
