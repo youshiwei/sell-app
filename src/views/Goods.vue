@@ -1,6 +1,6 @@
 <template>
   <div class="goodsList">
-    <div class="cates">
+    <div class="cates" id="cates">
       <ul>
         <li
           v-for="item in goodsList"
@@ -10,32 +10,43 @@
         >{{item.name}}</li>
       </ul>
     </div>
-    <div class="foods">
-      <div v-for="item in goodsList" :key="item.name" class="food">
-        <h2 class="name">{{ item.name}}</h2>
-        <ul>
-          <li v-for="v in item.foods" :key="v.id">
-            <img width="80" height="80" :src="v.imgUrl" alt />
-            <div class="content">
-              <p class="title">{{v.name}}</p>
-              <p class="rate">月售{{v.sellCount}}份 好评率{{v.rating}}%</p>
-              <p class="desc">{{v.goodsDesc}}</p>
-              <p class="price">￥{{v.price}}</p>
-            </div>
-          </li>
-        </ul>
+    <div id="foods" class="foods">
+      <div>
+        <div v-for="item in goodsList" :key="item.name" class="food">
+          <h2 class="name">{{ item.name}}</h2>
+          <ul>
+            <li v-for="v in item.foods" :key="v.id">
+              <img width="80" height="80" :src="v.imgUrl" alt />
+              <div class="content">
+                <p class="title">{{v.name}}</p>
+                <p class="rate">月售{{v.sellCount}}份 好评率{{v.rating}}%</p>
+                <p class="desc">{{v.goodsDesc}}</p>
+                <p class="price">￥{{v.price}}</p>
+              </div>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import BeScroll from "better-scroll";
 export default {
   props: ["goodsList"],
   data() {
     return {
       curActive: "新品专享"
     };
+  },
+  mounted() {
+    new BeScroll("#cates", {
+      click: true
+    });
+    new BeScroll("#foods", {
+      click: true
+    });
   }
 };
 </script>
