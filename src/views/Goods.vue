@@ -3,30 +3,34 @@
     <div class="cates" id="cates">
       <ul>
         <li
-          v-for="item in goodsList"
-          @click="ChangeActive(item.name)"
-          :class="{active: curActive === item.name }"
-          :key="item.name"
-        >{{item.name}}</li>
+          v-for="goods in goodsList"
+          @click="ChangeActive(goods.name)"
+          :class="{active: curActive === goods.name }"
+          :key="goods.name"
+        >{{goods.name}}</li>
       </ul>
     </div>
     <div id="foods" class="foods">
       <div>
-        <div :id="item.name" v-for="item in goodsList" :key="item.name" class="food">
-          <h2 class="name">{{ item.name}}</h2>
+        <div :id="goods.name" v-for="goods in goodsList" :key="goods.name" class="food">
+          <h2 class="name">{{ goods.name}}</h2>
           <ul>
-            <li @click="fetchDetail(v)" v-for="v in item.foods" :key="v.id">
-              <img width="80" height="80" :src="v.imgUrl" alt />
+            <li @click="fetchDetail(item)" v-for="item in goods.foods" :key="item.id">
+              <img width="80" height="80" :src="item.imgUrl" alt />
               <div class="content">
-                <p class="title">{{v.name}}</p>
-                <p class="rate">月售{{v.sellCount}}份 好评率{{v.rating}}%</p>
-                <p class="desc">{{v.goodsDesc}}</p>
-                <p class="price">￥{{v.price}}</p>
+                <p class="title">{{item.name}}</p>
+                <p class="rate">月售{{item.sellCount}}份 好评率{{item.rating}}%</p>
+                <p class="desc">{{item.goodsDesc}}</p>
+                <p class="price">￥{{item.price}}</p>
               </div>
               <div class="control">
-                <span @click.stop="v.count < 1 ? 0 : v.count--" class="iconfont icon-jianshao1"></span>
-                <span>{{v.count}}</span>
-                <span @click.stop="v.count++" class="iconfont icon-zengjia"></span>
+                <span
+                  v-show="item.count>0"
+                  @click.stop="change({name:item.name,num:-1})"
+                  class="iconfont icon-jianshao1"
+                ></span>
+                <span v-show="item.count>0">{{item.count}}</span>
+                <span @click.stop="change({name:item.name,num:+1})" class="iconfont icon-zengjia"></span>
               </div>
             </li>
           </ul>
@@ -42,12 +46,12 @@
 
 <script>
 import BeScroll from "better-scroll";
+import { mapState } from "vuex";
 import GoodsDetail from "@/components/GoodsDetail.vue";
 export default {
   components: {
     GoodsDetail
   },
-  props: ["goodsList"],
   data() {
     return {
       curFood: {},
@@ -62,6 +66,7 @@ export default {
       this.calcArr();
     });
   },
+
   methods: {
     ChangeActive(name) {
       this.curActive = name;
@@ -71,6 +76,7 @@ export default {
       this.isVisible = true;
       this.curFood = v;
     },
+    // 计算各分类高度数组
     calcArr() {
       let total = 0;
       for (let cate of this.goodsList) {
@@ -82,7 +88,14 @@ export default {
         });
         total = total + h;
       }
+    },
+    // 改变商品数量
+    change(num) {
+      this.$store.commit("CHANGE_COUNT", num);
     }
+  },
+  computed: {
+    ...mapState(["goodsList"])
   },
   updated() {
     this.calcArr();
@@ -100,9 +113,9 @@ export default {
     // 绑定滚动事件
     this.rightScroll.on("scroll", pos => {
       let y = Math.abs(pos.y);
-      for (let item of this.hArr) {
-        if (y >= item.min && y < item.max) {
-          this.curActive = item.name;
+      for (let goods of this.hArr) {
+        if (y >= goods.min && y < goods.max) {
+          this.curActive = goods.name;
         }
       }
     });

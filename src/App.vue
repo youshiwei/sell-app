@@ -2,7 +2,7 @@
   <div class="app">
     <Header :seller="seller" />
     <Nav />
-    <Main :goodsList="goodsList" :seller="seller" />
+    <Main :seller="seller" />
     <shop-cart />
   </div>
 </template>
@@ -15,6 +15,7 @@ import Main from "@/components/Main.vue";
 import ShopCart from "@/components/ShopCart.vue";
 
 import { getGoods, getSeller } from "@/api";
+import { mapMutations } from "vuex";
 export default {
   components: {
     Header,
@@ -44,10 +45,9 @@ export default {
     for (let v of goodsList) {
       for (let food of v.foods) {
         food.count = 0;
-        console.log(food);
       }
     }
-    this.goodsList = goodsList.reverse();
+    this.$store.commit("GET_GOODS", goodsList.reverse());
     this.seller = data;
   }
 };

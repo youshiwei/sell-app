@@ -35,11 +35,13 @@
       </div>
     </div>
     <Comment v-for="(v,i) in fetchRate" :key="i" :rating="v" />
+    <h2>{{goodsList}}</h2>
   </div>
 </template>
 
 <script>
 import { getRatings } from "@/api";
+import { mapState } from "vuex";
 import Comment from "@/components/Comment.vue";
 import Vue from "vue";
 import Moment from "moment";
@@ -69,6 +71,8 @@ export default {
     }
   },
   computed: {
+    ...mapState(["goodsList"]),
+    // 计算动态要显示的评论
     fetchRate() {
       this.rateCate.forEach(v => {
         if (v.name === this.curActive) {
