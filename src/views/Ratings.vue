@@ -1,44 +1,59 @@
 <template>
-  <div class="ratings">
-    <div class="overall-rating">
-      <div class="left">
-        <h2>3.9</h2>
-        <p>综合评分</p>
-        <span>高于周边商家62.9%</span>
-      </div>
-      <div class="right">
-        <div>
-          服务态度：
-          <van-rate v-model="value" :size="14" color="#ffd21e" void-icon="star" void-color="#eee" />
-          <span>3.9</span>
+  <div id="ratings" style="width:100%;height:100%;overflow:hidden">
+    <div class="ratings">
+      <div class="overall-rating">
+        <div class="left">
+          <h2>3.9</h2>
+          <p>综合评分</p>
+          <span>高于周边商家62.9%</span>
         </div>
-        <div>
-          商品质量：
-          <van-rate v-model="value" :size="14" color="#ffd21e" void-icon="star" void-color="#eee" />
-          <span>4.0</span>
+        <div class="right">
+          <div>
+            服务态度：
+            <van-rate
+              v-model="value"
+              :size="14"
+              color="#ffd21e"
+              void-icon="star"
+              void-color="#eee"
+            />
+            <span>3.9</span>
+          </div>
+          <div>
+            商品质量：
+            <van-rate
+              v-model="value"
+              :size="14"
+              color="#ffd21e"
+              void-icon="star"
+              void-color="#eee"
+            />
+            <span>4.0</span>
+          </div>
+          <div>送达时间：44分钟</div>
         </div>
-        <div>送达时间：44分钟</div>
       </div>
+      <div class="blank"></div>
+      <div class="action">
+        <div class="filter">
+          <button
+            @click="change(v.name)"
+            :class="{active:curActive === v.name}"
+            v-for="v in this.rateCate"
+            :key="v.name"
+          >{{v.name}}{{v.items.length}}</button>
+        </div>
+        <div class="check">
+          <van-checkbox v-model="checked" icon-size="24px">只看有内容的评价</van-checkbox>
+        </div>
+      </div>
+      <Comment v-for="(v,i) in fetchRate" :key="i" :rating="v" />
     </div>
-    <div class="blank"></div>
-    <div class="action">
-      <div class="filter">
-        <button
-          @click="change(v.name)"
-          :class="{active:curActive === v.name}"
-          v-for="v in this.rateCate"
-          :key="v.name"
-        >{{v.name}}{{v.items.length}}</button>
-      </div>
-      <div class="check">
-        <van-checkbox v-model="checked" icon-size="24px">只看有内容的评价</van-checkbox>
-      </div>
-    </div>
-    <Comment v-for="(v,i) in fetchRate" :key="i" :rating="v" />
   </div>
 </template>
 
 <script>
+import BScroll from "better-scroll";
 import { getRatings } from "@/api";
 import { mapState } from "vuex";
 import Comment from "@/components/Comment.vue";
@@ -103,6 +118,14 @@ export default {
       { name: "满意", items: this.goodRate },
       { name: "不满意", items: this.badRate },
     ];
+  },
+  mounted() {
+    new BScroll("#ratings", {
+      // 可以写id this.$refs.xx  document.getElmentById()
+      click: true, // 允许点击【better-scroll默认把点击禁止了】
+      // probeType: 3, // 可以派发滚动事件
+      // scrollX: true, // 开启横向滚动
+    });
   },
 };
 </script>

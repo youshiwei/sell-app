@@ -18,9 +18,11 @@
         <span v-else>￥15起送</span>
       </div>
     </div>
+    <!-- 蒙层 -->
     <transition name="fade">
       <div @click="visible= false" v-show="isVisible" class="model"></div>
     </transition>
+    <!-- 购物车列表 -->
     <transition name="slide">
       <div v-show="isVisible" class="goods-list">
         <h2 class="title">

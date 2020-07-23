@@ -5,8 +5,9 @@
 </template>
 
 <script>
+import BScroll from "better-scroll";
 export default {
-  props: ["goodsList", "seller"]
+  props: ["goodsList", "seller"],
 };
 </script>
 
