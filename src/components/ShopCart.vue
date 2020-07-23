@@ -14,15 +14,15 @@
       </div>
       <div class="right-box" :class="{active:Carts.allPrice >= 15}">
         <span v-if="Carts.allPrice >= 15">去结算</span>
-        <span v-else-if="Carts.allPrice >0">差￥{{15-Carts.allPrice}}起送</span>
+        <span v-else-if="Carts.allPrice >0">差￥{{(15-Carts.allPrice).toFixed(2)}}起送</span>
         <span v-else>￥15起送</span>
       </div>
     </div>
     <transition name="fade">
-      <div @click="visible= false" v-show="visible && Carts.newArr.length" class="model"></div>
+      <div @click="visible= false" v-show="isVisible" class="model"></div>
     </transition>
     <transition name="slide">
-      <div v-show="visible && Carts.newArr.length" class="goods-list">
+      <div v-show="isVisible" class="goods-list">
         <h2 class="title">
           <span>已选商品</span>
           <span>
@@ -33,7 +33,7 @@
           <li v-for="item in Carts.newArr" :key="item.id">
             <div class="left">
               <span class="name">{{ item.name }}</span>
-              <span class="price">￥{{item.price}}</span>
+              <span class="price">￥{{(item.price*item.count).toFixed(2)}}</span>
             </div>
             <div class="control">
               <span
@@ -56,7 +56,7 @@ import { mapMutations } from "vuex";
 export default {
   data() {
     return {
-      visible: false
+      visible: false,
     };
   },
   methods: {
@@ -65,14 +65,21 @@ export default {
       this.$store.commit("CHANGE_COUNT", num);
     },
     // 清空购物车
-    ...mapMutations(["CLEARALL"])
+    ...mapMutations(["CLEARALL"]),
   },
   computed: {
     // 购物车数据
     Carts() {
       return this.$store.getters.SHOP_CART;
-    }
-  }
+    },
+    // 购物车列表是否显示
+    isVisible() {
+      if (!this.Carts.newArr.length) {
+        this.visible = false;
+      }
+      return this.visible;
+    },
+  },
 };
 </script>
 
@@ -203,6 +210,7 @@ export default {
           .name {
             flex: 0 0 200px;
             overflow: hidden;
+            width: 200px;
             line-height: 50px;
             white-space: nowrap;
             text-overflow: ellipsis;
@@ -211,7 +219,7 @@ export default {
             flex: 1;
             display: flex;
             color: red;
-            justify-content: center;
+            justify-content: flex-start;
             align-items: center;
           }
         }

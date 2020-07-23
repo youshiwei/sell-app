@@ -5,7 +5,8 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    goodsList: []
+    goodsList: [],
+    curFood: {}
   },
   mutations: {
     // 获取商品列表
@@ -29,6 +30,21 @@ export default new Vuex.Store({
           food.count = 0;
         }
       }
+    },
+    // 设置当前商品
+    SET_CUR(state, layload) {
+      state.curFood = layload
+    },
+    // 商品详情页，添加商品到购物车
+    ADD_CART(state, name) {
+      for (let v of state.goodsList) {
+        for (let food of v.foods) {
+          if (food.name === name) {
+            food.count += 1;
+          }
+        }
+      }
+
     }
 
   },

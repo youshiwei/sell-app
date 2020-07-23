@@ -39,7 +39,7 @@
     </div>
     <!-- 商品详情 -->
     <transition name="slide">
-      <goods-detail :curFood="curFood" @handleClose="isVisible = false" v-show="this.isVisible" />
+      <goods-detail @handleClose="isVisible = false" v-show="this.isVisible" />
     </transition>
   </div>
 </template>
@@ -50,15 +50,14 @@ import { mapState } from "vuex";
 import GoodsDetail from "@/components/GoodsDetail.vue";
 export default {
   components: {
-    GoodsDetail
+    GoodsDetail,
   },
   data() {
     return {
-      curFood: {},
       curActive: "新品专享",
       rightScroll: {},
       hArr: [],
-      isVisible: false
+      isVisible: false,
     };
   },
   created() {
@@ -72,9 +71,9 @@ export default {
       this.curActive = name;
       this.rightScroll.scrollToElement(document.getElementById(name), 300);
     },
-    fetchDetail(v) {
+    fetchDetail(cur) {
       this.isVisible = true;
-      this.curFood = v;
+      this.$store.commit("SET_CUR", cur);
     },
     // 计算各分类高度数组
     calcArr() {
@@ -84,7 +83,7 @@ export default {
         this.hArr.push({
           min: total,
           max: total + h,
-          name: cate.name
+          name: cate.name,
         });
         total = total + h;
       }
@@ -92,10 +91,10 @@ export default {
     // 改变商品数量
     change(num) {
       this.$store.commit("CHANGE_COUNT", num);
-    }
+    },
   },
   computed: {
-    ...mapState(["goodsList"])
+    ...mapState(["goodsList"]),
   },
   updated() {
     this.calcArr();
@@ -103,15 +102,15 @@ export default {
   mounted() {
     // 左侧滚动丝滑
     new BeScroll("#cates", {
-      click: true
+      click: true,
     });
     // 右侧滚动丝滑
     this.rightScroll = new BeScroll("#foods", {
       click: true, //可以点击
-      probeType: 3 // 可以派发滚动事件
+      probeType: 3, // 可以派发滚动事件
     });
     // 绑定滚动事件
-    this.rightScroll.on("scroll", pos => {
+    this.rightScroll.on("scroll", (pos) => {
       let y = Math.abs(pos.y);
       for (let goods of this.hArr) {
         if (y >= goods.min && y < goods.max) {
@@ -119,7 +118,7 @@ export default {
         }
       }
     });
-  }
+  },
 };
 </script>
 

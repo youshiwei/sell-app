@@ -56,11 +56,17 @@
     <div class="blank"></div>
     <div class="block">
       <h2 class="title">商家实景</h2>
-      <ul style="display:flex;overflow-x:scorll;padding:0 20px;">
-        <li v-for="(v,i) in seller.pics" :key="i">
-          <img width="80" height="80" :src="v" alt />
-        </li>
-      </ul>
+      <div id="hScroll" style="padding:20px; display:flex">
+        <img
+          style="margin-right:10px"
+          v-for="(v,i) in seller.pics"
+          :key="i"
+          width="80"
+          height="80"
+          :src="v"
+          alt
+        />
+      </div>
     </div>
     <div class="blank"></div>
     <div class="block">
@@ -80,11 +86,20 @@
 <script>
 import Vue from "vue";
 import { Rate, Icon } from "vant";
+import BScroll from "better-scroll";
 Vue.use(Rate);
 Vue.use(Icon);
 
 export default {
-  props: ["seller"]
+  props: ["seller"],
+  mounted() {
+    new BScroll("#hScroll", {
+      // 可以写id this.$refs.xx  document.getElmentById()
+      click: true, // 允许点击【better-scroll默认把点击禁止了】
+      probeType: 3, // 可以派发滚动事件
+      scrollX: true, // 开启横向滚动
+    });
+  },
 };
 </script>
 

@@ -9,7 +9,7 @@
       </p>
       <div class="horizon">
         <span class="price">￥{{curFood.price}}</span>
-        <div class="cart">加入购物车</div>
+        <div @click="addToCart(curFood.name)" class="cart">加入购物车</div>
       </div>
     </div>
     <Card>
@@ -35,7 +35,7 @@
 <script>
 import Card from "@/components/Card.vue";
 import Comment from "@/components/Comment.vue";
-
+import { mapState } from "vuex";
 import Vue from "vue";
 import { Checkbox } from "vant";
 Vue.use(Checkbox);
@@ -43,19 +43,25 @@ Vue.use(Checkbox);
 export default {
   components: {
     Card,
-    Comment
+    Comment,
   },
   data() {
     return {
-      checked: false
+      checked: false,
     };
   },
-  props: ["curFood"],
   methods: {
     close() {
       this.$emit("handleClose");
-    }
-  }
+    },
+    addToCart(name) {
+      this.$emit("handleClose");
+      this.$store.commit("ADD_CART", name);
+    },
+  },
+  computed: {
+    ...mapState(["curFood"]),
+  },
 };
 </script>
 
@@ -122,11 +128,16 @@ export default {
     }
   }
   i {
-    font-size: 36px;
+    font-size: 24px;
     position: fixed;
-    bottom: 40px;
-    left: 50%;
-    transform: translateX(-50%);
+    text-align: center;
+    color: #ccc;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    background-color: #999;
+    top: 5px;
+    right: 5px;
   }
 }
 </style>

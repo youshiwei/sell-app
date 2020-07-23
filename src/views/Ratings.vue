@@ -35,7 +35,6 @@
       </div>
     </div>
     <Comment v-for="(v,i) in fetchRate" :key="i" :rating="v" />
-    <h2>{{goodsList}}</h2>
   </div>
 </template>
 
@@ -51,7 +50,7 @@ Vue.use(Checkbox);
 Vue.use(CheckboxGroup);
 export default {
   components: {
-    Comment
+    Comment,
   },
   data() {
     return {
@@ -62,36 +61,36 @@ export default {
       badRate: [],
       rateCate: [],
       checked: false,
-      curActive: "全部"
+      curActive: "全部",
     };
   },
   methods: {
     change(name) {
       this.curActive = name;
-    }
+    },
   },
   computed: {
     ...mapState(["goodsList"]),
     // 计算动态要显示的评论
     fetchRate() {
-      this.rateCate.forEach(v => {
+      this.rateCate.forEach((v) => {
         if (v.name === this.curActive) {
           this.curRate = v.items;
         }
       });
       if (this.checked) {
-        return this.curRate.filter(v => v.text != "");
+        return this.curRate.filter((v) => v.text != "");
       }
       return this.curRate;
-    }
+    },
   },
   async created() {
     let { data } = await getRatings();
-    data.forEach(v => {
+    data.forEach((v) => {
       v.rateTime = Moment(v.rateTime).format("YYYY-MM-DD HH:mm");
     });
     // 获取各评论类型的数量
-    data.forEach(v => {
+    data.forEach((v) => {
       if (v.score >= 4) {
         this.goodRate.push(v);
       } else {
@@ -102,9 +101,9 @@ export default {
     this.rateCate = [
       { name: "全部", items: this.allRate },
       { name: "满意", items: this.goodRate },
-      { name: "不满意", items: this.badRate }
+      { name: "不满意", items: this.badRate },
     ];
-  }
+  },
 };
 </script>
 
