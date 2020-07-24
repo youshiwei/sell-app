@@ -36,18 +36,15 @@
       <div class="blank"></div>
       <div class="action">
         <div class="filter">
-          <button
-            @click="change(v.name)"
-            :class="{active:curActive === v.name}"
-            v-for="v in this.rateCate"
-            :key="v.name"
-          >{{v.name}}{{v.items.length}}</button>
+          <button @click="state = 'all'" :class="{active:state === 'all'}">全部{{all}}</button>
+          <button @click="state = 'ok'" :class="{active:state === 'ok'}">满意{{ok}}</button>
+          <button @click="state = 'no'" :class="{active:state === 'no'}">不满意{{no}}</button>
         </div>
         <div class="check">
           <van-checkbox v-model="checked" icon-size="24px">只看有内容的评价</van-checkbox>
         </div>
       </div>
-      <Comment v-for="(v,i) in fetchRate" :key="i" :rating="v" />
+      <Comment v-for="(v,i) in RateType" :key="i" :rating="v" />
     </div>
   </div>
 </template>
@@ -59,10 +56,8 @@ import { mapState } from "vuex";
 import Comment from "@/components/Comment.vue";
 import Vue from "vue";
 import Moment from "moment";
-import { Button, Checkbox, CheckboxGroup } from "vant";
-Vue.use(Button);
+import { Checkbox } from "vant";
 Vue.use(Checkbox);
-Vue.use(CheckboxGroup);
 export default {
   components: {
     Comment,
@@ -70,61 +65,59 @@ export default {
   data() {
     return {
       value: 4.0,
-      curRate: [],
-      allRate: [],
-      goodRate: [],
-      badRate: [],
-      rateCate: [],
+      state: "all",
       checked: false,
-      curActive: "全部",
+      ratings: [],
     };
   },
-  methods: {
-    change(name) {
-      this.curActive = name;
-    },
-  },
+  methods: {},
   computed: {
     ...mapState(["goodsList"]),
     // 计算动态要显示的评论
-    fetchRate() {
-      this.rateCate.forEach((v) => {
-        if (v.name === this.curActive) {
-          this.curRate = v.items;
+    RateType() {
+      if (this.state === "all") {
+        if (this.checked) {
+          return this.ratings.filter((v) => v.text != "");
         }
-      });
-      if (this.checked) {
-        return this.curRate.filter((v) => v.text != "");
+        return this.ratings;
+      } else if (this.state === "ok") {
+        if (this.checked) {
+          return this.ratings
+            .filter((v) => v.score >= 4)
+            .filter((v) => v.text != "");
+        }
+        return this.ratings.filter((v) => v.score >= 4);
+      } else if (this.state === "no") {
+        if (this.checked) {
+          return this.ratings
+            .filter((v) => v.score < 4)
+            .filter((v) => v.text != "");
+        }
+        return this.ratings.filter((v) => v.score < 4);
       }
-      return this.curRate;
+    },
+    // 全部评论
+    all() {
+      return this.ratings.length;
+    },
+    // 满意评论
+
+    ok() {
+      return this.ratings.filter((v) => v.score >= 4).length;
+    },
+    // 不满意评论
+
+    no() {
+      return this.ratings.filter((v) => v.score < 4).length;
     },
   },
   async created() {
     let { data } = await getRatings();
-    data.forEach((v) => {
-      v.rateTime = Moment(v.rateTime).format("YYYY-MM-DD HH:mm");
-    });
-    // 获取各评论类型的数量
-    data.forEach((v) => {
-      if (v.score >= 4) {
-        this.goodRate.push(v);
-      } else {
-        this.badRate.push(v);
-      }
-    });
-    this.allRate = [...this.goodRate, ...this.badRate];
-    this.rateCate = [
-      { name: "全部", items: this.allRate },
-      { name: "满意", items: this.goodRate },
-      { name: "不满意", items: this.badRate },
-    ];
+    this.ratings = data;
   },
   mounted() {
     new BScroll("#ratings", {
-      // 可以写id this.$refs.xx  document.getElmentById()
       click: true, // 允许点击【better-scroll默认把点击禁止了】
-      // probeType: 3, // 可以派发滚动事件
-      // scrollX: true, // 开启横向滚动
     });
   },
 };

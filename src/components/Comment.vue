@@ -27,13 +27,14 @@
           <i v-else style="color:gray" class="iconfont icon-buzan"></i>
         </div>
         <div class="recommend-item">
-          <van-button
+          <van-tag
+            plain
             v-for="(v,i) in rating.recommend"
             :key="i"
             style="display:inline-block; margin:0 3px 3px 0;"
             type="default"
             size="mini"
-          >{{v}}</van-button>
+          >{{v}}</van-tag>
         </div>
       </div>
     </div>
@@ -43,20 +44,21 @@
 <script>
 import Vue from "vue";
 import Moment from "moment";
-import { Image as VanImage } from "vant";
+import { Image as VanImage, Tag } from "vant";
+Vue.use(Tag);
 Vue.use(VanImage);
 export default {
   props: ["rating"],
   data() {
     return {
-      value: 4.0
+      value: 4.0,
     };
   },
   filters: {
     formatTime(time) {
       return Moment(time).format("YYYY-MM-DD HH:mm");
-    }
-  }
+    },
+  },
 };
 </script>
 

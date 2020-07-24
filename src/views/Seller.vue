@@ -57,16 +57,18 @@
       <div class="blank"></div>
       <div class="block">
         <h2 class="title">商家实景</h2>
-        <div style="padding:20px; display:flex; overflow:scroll">
-          <img
-            style="margin-right:10px"
-            v-for="(v,i) in seller.pics"
-            :key="i"
-            width="80"
-            height="80"
-            :src="v"
-            alt
-          />
+        <div id="pics" style="padding:20px; overflow:hidden ">
+          <div style="width:450px">
+            <img
+              style="margin-right:10px"
+              v-for="(v,i) in seller.pics"
+              :key="i"
+              width="80"
+              height="80"
+              :src="v"
+              alt
+            />
+          </div>
         </div>
       </div>
       <div class="blank"></div>
@@ -95,6 +97,12 @@ Vue.use(Icon);
 export default {
   props: ["seller"],
   mounted() {
+    new BScroll("#pics", {
+      // 可以写id this.$refs.xx  document.getElmentById()
+      click: true, // 允许点击【better-scroll默认把点击禁止了】
+      probeType: 3, // 可以派发滚动事件
+      scrollX: true, // 开启横向滚动
+    });
     new BScroll("#seller", {
       // 可以写id this.$refs.xx  document.getElmentById()
       click: true, // 允许点击【better-scroll默认把点击禁止了】
