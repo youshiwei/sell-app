@@ -1,5 +1,5 @@
 <template>
-  <div id="seller" style="width:100%;height:100%;overflow:scroll;">
+  <div id="seller" style="width:100%;height:100%;overflow:hidden;">
     <div class="seller">
       <div class="head">
         <div class="left">
@@ -57,7 +57,7 @@
       <div class="blank"></div>
       <div class="block">
         <h2 class="title">商家实景</h2>
-        <div id="pics" style="padding:20px; overflow:hidden ">
+        <div id="pics" style="margin:20px; overflow:hidden ">
           <div style="width:450px">
             <img
               style="margin-right:10px"
